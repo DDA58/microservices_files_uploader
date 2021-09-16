@@ -1,0 +1,28 @@
+version: '3.5'
+
+services:
+  files_uploader:
+    build:
+      context: ./
+      dockerfile: ./docker/Dockerfile
+    image: files_uploader
+    container_name: ${APP_NAME}_files_uploader
+    restart: unless-stopped
+    working_dir: /var/www/files_uploader
+    volumes:
+      - ./:/var/www/files_uploader
+  nginx_files_uploader:
+    image: nginx:alpine
+    container_name: ${APP_NAME}_files_uploader_nginx
+    restart: unless-stopped
+    ports:
+    - 8282:80
+    volumes:
+      - ./:/var/www/files_uploader
+      - ./docker/nginx:/etc/nginx/conf.d
+    depends_on:
+      - files_uploader
+networks:
+  default:
+    external: true
+    name: microservices
