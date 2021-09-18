@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Events\FileUploaded;
 use App\Listeners\AddToList;
+use App\Subscribers\FileUploadedSubscriber;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
@@ -15,7 +16,7 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $listen = [
         FileUploaded::class => [
-            AddToList::class,
+            FileUploadedSubscriber::class,
         ],
     ];
 

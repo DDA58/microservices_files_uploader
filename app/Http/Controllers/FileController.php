@@ -3,11 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\File;
-use App\Models\User;
 use App\Services\Uploader;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse as Response;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\UploadFilesRequest;
 
 
 class FileController extends Controller
@@ -16,21 +15,17 @@ class FileController extends Controller
         $this->middleware('auth:api');
     }
 
-    public function upload(Request $request, Uploader $uploader): Response {
-        foreach (array_keys($request->files->all()) as $file) {
-            $validator = Validator::make($request->files->all(), [
-                $file => 'required|file|max:1024',
-            ]);
-
-            $validator->validate();
-        }
-
-        $uploader->setUser(auth()->user())->upload();
+    public function upload(UploadFilesRequest $request, Uploader $uploader): Response {
+        $uploader->upload();
 
         return response()->json($uploader->getStorage()->getCollection());
     }
 
     public function remove(File $file): Response {
+        if ($file->user_id != auth()->user()->id) {
+            abort(403);
+        }
+
         $file->delete();
 
         return response()->json(['message' => 'Removed']);

@@ -2,9 +2,11 @@
 
 namespace App\Providers;
 
-use Illuminate\Routing\UrlGenerator;
+use App\Services\EventDispatcher\IEventDispatcher;
+use App\Services\JobDispatcher\IJobDispatcher;
+use App\Services\JobDispatcher\LaravelJobDispatcher;
 use Illuminate\Support\ServiceProvider;
-use Services\GatewayUrlGenerator;
+use App\Services\EventDispatcher\LaravelEventDispatcher;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -15,7 +17,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-
+        $this->app->bind(IEventDispatcher::class, LaravelEventDispatcher::class);
+        $this->app->bind(IJobDispatcher::class, LaravelJobDispatcher::class);
     }
 
     /**

@@ -2,9 +2,9 @@
 
 namespace App\Services;
 
-
+use Illuminate\Contracts\Auth\Authenticatable;
 use \Illuminate\Contracts\Auth\Authenticatable as User;
-use Illuminate\Http\Request;
+use App\Http\Requests\UploadFilesRequest as Request;
 
 class Uploader
 {
@@ -13,10 +13,11 @@ class Uploader
     private ?User $user = null;
     private IStorage $storage;
 
-    public function __construct(Request $request, IStorage $storage)
+    public function __construct(Request $request, IStorage $storage, Authenticatable $user)
     {
         $this->request = $request;
         $this->storage = $storage;
+        $this->user = $user;
     }
 
     public function upload() {

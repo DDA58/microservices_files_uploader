@@ -1,20 +1,24 @@
 <?php
 
-namespace App\Listeners;
+namespace App\Jobs;
 
-use App\Events\FileUploaded;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class AddToList implements ShouldQueue
+abstract class ABaseJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public function handle(FileUploaded $event)
-    {
+    public string $failing_priority = 'low';
 
+    /**
+     * @return string
+     */
+    public function getFailingPriority(): string
+    {
+        return $this->failing_priority;
     }
 }
